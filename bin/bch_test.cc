@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <stdlib.h>
-#include "bch_codec.h"
+#include <bch_codec/bch_codec.h>
 #include <string.h>
 using namespace std;
 
