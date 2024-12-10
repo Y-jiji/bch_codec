@@ -43,7 +43,7 @@ function(AutoBuild)
         EXPORT ${CMAKE_PROJECT_NAME}_target
     )
     install(EXPORT ${CMAKE_PROJECT_NAME}_target
-        FILE ${CMAKE_PROJECT_NAME}_target.cmake
+        FILE ${CMAKE_PROJECT_NAME}.cmake
         NAMESPACE ${CMAKE_PROJECT_NAME}::
         DESTINATION lib/cmake/${CMAKE_PROJECT_NAME}
     )
