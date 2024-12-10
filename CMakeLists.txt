@@ -40,3 +40,29 @@ AutoBuild(
     LIB_DIR "lib" SHARED
     BIN_DIR "bin"
 )
+
+# -- Manage Third Party Dependencies
+
+Git(
+    SITE    "https://github.com"
+    USER    "gflags"
+    REPO    "gflags"
+    BRANCH  "v2.2.2"
+    PIPELINE "CMAKE INSTALL" FLAGS "-DBUILD_SHARED_LIBS=ON" PUBLIC
+)
+Git(
+    SITE    "https://github.com"
+    USER    "google"
+    REPO    "glog"
+    BRANCH  "v0.7.0"
+    PIPELINE "CMAKE INSTALL" PUBLIC
+)
+Git(
+    SITE    "https://github.com"
+    USER    "google"
+    REPO    "googletest"
+    BRANCH  "v1.14.0"
+    PACK    "GTest"
+    TARGET  "gtest"
+    PIPELINE "CMAKE SUBDIR"
+)

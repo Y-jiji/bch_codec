@@ -1,5 +1,3 @@
-
-
 # -- Scan Source and Configure Build
 
 function(AutoBuild)
@@ -34,11 +32,21 @@ function(AutoBuild)
     endif()
 
     # Configure Build Target Directory
-    target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/include)
+    target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
+        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    )
 
     # Configure Installation
     include(GNUInstallDirs)
-    install(TARGETS ${CMAKE_PROJECT_NAME})
+    install(TARGETS ${CMAKE_PROJECT_NAME}
+        EXPORT ${CMAKE_PROJECT_NAME}_target
+    )
+    install(EXPORT ${CMAKE_PROJECT_NAME}_target
+        FILE ${CMAKE_PROJECT_NAME}_target.cmake
+        NAMESPACE ${CMAKE_PROJECT_NAME}::
+        DESTINATION lib/cmake/${CMAKE_PROJECT_NAME}
+    )
 
     # Make gtests available in`ctest` test framework
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -123,14 +131,14 @@ function(CMakeInstall)
     find_package(${CMI_PACK} REQUIRED QUIET)
     if(${CMI_PUBLIC})
         message(STATUS "+ " "ADD ${CMI_TARGET} AS PUBLIC DEPENDENCY")
-        target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/include)
+        target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/include>)
         target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${CMI_TARGET})
-        target_link_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/lib)
+        target_link_directories(${CMAKE_PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/lib>)
     else()
         message(STATUS "+ " "ADD ${CMI_TARGET} AS PRVIATE DEPENDENCY")
-        target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/include)
+        target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/include>)
         target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${CMI_TARGET})
-        target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/lib)
+        target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/3rd_party_install/${CMI_USER}/${CMI_REPO}/lib>)
     endif()
 endfunction()
 
